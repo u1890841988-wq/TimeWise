@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeWise AI | Pro Edition</title>
+    <title>TimeWise AI | Gemini Edition</title>
     <style>
         :root {
             --glass: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.3);
             --accent: #7dd3fc;
-            --ai-glow: #c084fc;
+            --gemini-grad: linear-gradient(135deg, #4285f4, #9b72f3);
             --text: #ffffff;
             --bg-default: url('https://w0.peakpx.com/wallpaper/423/343/HD-wallpaper-anime-sky-clouds-scenery-horizon.jpg');
         }
@@ -20,76 +20,66 @@
             display: flex; flex-direction: column; align-items: center;
             background: #000 var(--bg-default) no-repeat center center fixed;
             background-size: cover;
+            overflow-x: hidden;
         }
 
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.2); z-index: -1;
+            background: rgba(0, 0, 0, 0.15); z-index: -1;
         }
 
-        header { padding: 40px 20px 20px; text-align: center; font-size: 42px; font-weight: 900; text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+        header { padding: 40px 20px 20px; text-align: center; font-size: 42px; font-weight: 900; text-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        .container { width: 95%; max-width: 600px; z-index: 1; padding-bottom: 50px; }
+        .container { width: 95%; max-width: 600px; z-index: 1; padding-bottom: 100px; }
 
-        /* NAVIGATION MIT EXTREM WEITEM ABSTAND */
-        .nav { 
-            display: flex; 
-            justify-content: center; 
-            gap: clamp(20px, 8vw, 60px); 
-            margin-bottom: 30px; 
-            flex-wrap: wrap;
-        }
+        .nav { display: flex; justify-content: center; gap: 60px; margin-bottom: 30px; flex-wrap: wrap; }
 
         .nav-btn { 
-            background: var(--glass); 
-            border: 1px solid var(--glass-border); 
-            color: white; 
-            padding: 10px 25px; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-size: 0.9rem;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            background: var(--glass); border: 1px solid var(--glass-border); color: white; 
+            padding: 12px 30px; border-radius: 50px; cursor: pointer; backdrop-filter: blur(10px); transition: 0.3s;
         }
 
-        .nav-btn.active { 
-            background: white; 
-            color: #1e293b; 
-            font-weight: bold; 
-            box-shadow: 0 0 20px var(--accent);
-        }
+        .nav-btn.active { background: white; color: #1e293b; font-weight: bold; box-shadow: 0 0 20px var(--accent); }
 
         .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px) saturate(160%);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 25px; margin-bottom: 20px;
+            background: var(--glass); backdrop-filter: blur(20px) saturate(160%);
+            border: 1px solid var(--glass-border); border-radius: 25px; padding: 25px; margin-bottom: 20px;
         }
-
-        label { display: block; font-size: 0.7rem; margin-bottom: 8px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
         input, select {
             width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border); border-radius: 12px;
-            color: white; margin-bottom: 15px; font-size: 15px; box-sizing: border-box; outline: none;
+            border: 1px solid var(--glass-border); border-radius: 12px; color: white; margin-bottom: 15px;
         }
 
-        .btn {
-            width: 100%; padding: 16px; border-radius: 15px; border: none;
-            font-weight: 700; cursor: pointer; transition: 0.3s;
+        .btn-main { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 700; background: var(--accent); color: #0c4a6e; cursor: pointer; }
+
+        /* GEMINI CHAT UNTEN RECHTS */
+        #gemini-chat-toggle {
+            position: fixed; bottom: 30px; right: 30px; width: 65px; height: 65px;
+            background: var(--gemini-grad); border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 100; transition: 0.3s;
         }
-        .btn-main { background: var(--accent); color: #0c4a6e; margin-bottom: 10px; }
-        .btn-ai { background: linear-gradient(135deg, var(--ai-glow), #818cf8); color: white; }
+        #gemini-chat-toggle:hover { transform: scale(1.1); }
 
-        /* FOCUS TIMER STYLES */
-        .timer-display { font-size: 4rem; text-align: center; font-weight: 800; margin: 10px 0; font-variant-numeric: tabular-nums; }
+        #gemini-window {
+            position: fixed; bottom: 110px; right: 30px; width: 350px; height: 450px;
+            background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-radius: 20px;
+            display: none; flex-direction: column; z-index: 99; overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
 
-        .task-card { display: flex; justify-content: space-between; align-items: center; }
-        .delete-btn { background: rgba(255, 68, 68, 0.3); border: none; color: white; padding: 5px 12px; border-radius: 10px; cursor: pointer; }
+        .chat-header { padding: 15px; background: var(--gemini-grad); font-weight: bold; font-size: 0.9rem; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem; }
+        .msg { padding: 10px 14px; border-radius: 15px; max-width: 80%; }
+        .msg-ai { background: rgba(255,255,255,0.1); align-self: flex-start; }
+        .msg-user { background: var(--gemini-grad); align-self: flex-end; }
+
+        .chat-input-area { padding: 15px; display: flex; gap: 10px; border-top: 1px solid var(--glass-border); }
+        .chat-input-area input { margin-bottom: 0; padding: 10px; font-size: 0.8rem; }
         
-        .alarm-active { animation: pulse 1s infinite; border-color: #f87171; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(248, 113, 113, 0); } 100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0); } }
+        .timer-display { font-size: 3rem; text-align: center; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -106,215 +96,129 @@
 <div class="container">
     <div id="plannerPage" class="page">
         <div class="glass-card">
-            <label id="lbl-task">Aufgabe</label>
-            <input type="text" id="taskName" placeholder="...">
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <div style="flex: 1; min-width: 140px;">
-                    <label id="lbl-from">Von</label>
-                    <input type="datetime-local" id="taskStart">
-                </div>
-                <div style="flex: 1; min-width: 140px;">
-                    <label id="lbl-to">Bis</label>
-                    <input type="datetime-local" id="taskEnd">
-                </div>
-            </div>
-            <button class="btn btn-main" id="btn-add" onclick="addTask()">Termin hinzufügen</button>
-            <button class="btn btn-ai" id="btn-ai" onclick="aiSort()">✨ KI-Optimierung</button>
+            <input type="text" id="taskName" placeholder="Aufgabe">
+            <input type="datetime-local" id="taskStart">
+            <input type="datetime-local" id="taskEnd">
+            <button class="btn-main" onclick="addTask()">Hinzufügen</button>
         </div>
         <div id="taskList"></div>
     </div>
 
     <div id="alarmPage" class="page" style="display: none;">
         <div class="glass-card">
-            <label id="lbl-alarm-set">Wecker stellen</label>
             <input type="time" id="alarmTime">
-            <input type="text" id="alarmNote" placeholder="Erinnerung (optional)">
-            <button class="btn btn-main" id="btn-alarm-add" onclick="addAlarm()">Wecker aktivieren</button>
+            <button class="btn-main" onclick="addAlarm()">Wecker stellen</button>
         </div>
         <div id="alarmList"></div>
     </div>
 
     <div id="focusPage" class="page" style="display: none;">
         <div class="glass-card" style="text-align: center;">
-            <label>Focus Timer</label>
             <div class="timer-display" id="timerDisplay">25:00</div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-main" onclick="toggleTimer()" id="btn-timer-start">Start</button>
-                <button class="btn" style="background: rgba(255,255,255,0.1); color: white;" onclick="resetTimer()">Reset</button>
-            </div>
+            <button class="btn-main" onclick="toggleTimer()">Start / Pause</button>
         </div>
     </div>
 
     <div id="settingsPage" class="page" style="display: none;">
         <div class="glass-card">
-            <label id="lbl-lang">Sprache / Language</label>
             <select id="langSelect" onchange="changeLanguage(this.value)">
                 <option value="de">Deutsch</option>
                 <option value="en">English</option>
-                <option value="fr">Français</option>
                 <option value="jp">日本語</option>
             </select>
         </div>
     </div>
 </div>
 
+<div id="gemini-window">
+    <div class="chat-header">Gemini AI Assistant</div>
+    <div class="chat-messages" id="chatMsgs">
+        <div class="msg msg-ai">Hallo! Ich bin dein Gemini Assistant. Wie kann ich dir heute bei deiner Planung helfen?</div>
+    </div>
+    <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Frag mich was...">
+        <button onclick="sendChat()" style="background:none; border:none; color:var(--accent); cursor:pointer; font-weight:bold;">Senden</button>
+    </div>
+</div>
+
+<div id="gemini-chat-toggle" onclick="toggleChat()">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+</div>
+
 <script>
-    const i18n = {
-        de: { title: "TimeWise AI", planner: "Planer", alarm: "Wecker", focus: "Fokus", settings: "Settings", task: "Aufgabe", from: "Von", to: "Bis", add: "Hinzufügen", ai: "✨ KI-Optimierung", ph: "Was steht an?", alarmSet: "Weit gestellter Wecker" },
-        en: { title: "TimeWise AI", planner: "Planner", alarm: "Alarm", focus: "Focus", settings: "Settings", task: "Task", from: "From", to: "To", add: "Add Task", ai: "✨ AI Optimize", ph: "What's next?", alarmSet: "Set Alarm" },
-        fr: { title: "TimeWise AI", planner: "Agenda", alarm: "Réveil", focus: "Focus", settings: "Réglages", task: "Tâche", from: "De", to: "À", add: "Ajouter", ai: "✨ Optimisation IA", ph: "Quoi de neuf?", alarmSet: "Régler l'alarme" },
-        jp: { title: "タイムワイズ AI", planner: "予定表", alarm: "目覚まし", focus: "集中", settings: "設定", task: "タスク", from: "開始", to: "終了", add: "追加", ai: "✨ AI最適化", ph: "次は何？", alarmSet: "アラーム設定" }
-    };
+    let tasks = [];
+    let currentLang = 'de';
 
-    let tasks = JSON.parse(localStorage.getItem('tw_tasks')) || [];
-    let alarms = JSON.parse(localStorage.getItem('tw_alarms')) || [];
-    let currentLang = localStorage.getItem('tw_lang') || 'de';
-    
-    // TIMER VARIABLEN
-    let timerInterval;
-    let timeLeft = 25 * 60;
-    let isTimerRunning = false;
-
-    function changeLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('tw_lang', lang);
-        applyTexts();
+    // CHAT FUNKTION
+    function toggleChat() {
+        const win = document.getElementById('gemini-window');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
     }
 
-    function applyTexts() {
-        const t = i18n[currentLang];
-        document.getElementById('ui-title').innerText = t.title;
-        document.getElementById('nav-planner').innerText = t.planner;
-        document.getElementById('nav-alarm').innerText = t.alarm;
-        document.getElementById('nav-focus').innerText = t.focus;
-        document.getElementById('nav-settings').innerText = t.settings;
-        document.getElementById('lbl-task').innerText = t.task;
-        document.getElementById('lbl-from').innerText = t.from;
-        document.getElementById('lbl-to').innerText = t.to;
-        document.getElementById('btn-add').innerText = t.add;
-        document.getElementById('btn-ai').innerText = t.ai;
-        document.getElementById('taskName').placeholder = t.ph;
-        document.getElementById('langSelect').value = currentLang;
-        render();
-        renderAlarms();
+    function sendChat() {
+        const input = document.getElementById('chatInput');
+        const box = document.getElementById('chatMsgs');
+        if(!input.value) return;
+
+        // User Nachricht
+        box.innerHTML += `<div class="msg msg-user">${input.value}</div>`;
+        
+        // Simuliere Gemini Antwort
+        const val = input.value.toLowerCase();
+        setTimeout(() => {
+            let reply = "Das klingt interessant! Als Gemini-KI unterstütze ich dich gerne bei deinem Zeitmanagement.";
+            if(val.includes("plan") || val.includes("aufgabe")) reply = "Ich empfehle dir, deine wichtigste Aufgabe direkt am Morgen zu erledigen.";
+            box.innerHTML += `<div class="msg msg-ai">${reply}</div>`;
+            box.scrollTop = box.scrollHeight;
+        }, 600);
+
+        input.value = "";
     }
 
-    // --- PLANER LOGIK ---
+    // TASK FUNKTIONEN
     function addTask() {
         const name = document.getElementById('taskName').value;
-        const start = document.getElementById('taskStart').value;
-        const end = document.getElementById('taskEnd').value;
-        if(!name || !start || !end) return;
-        tasks.push({ id: Date.now(), name, start, end });
-        localStorage.setItem('tw_tasks', JSON.stringify(tasks));
-        render();
-        document.getElementById('taskName').value = "";
+        if(!name) return;
+        tasks.push({id: Date.now(), name: name, start: document.getElementById('taskStart').value});
+        renderTasks();
     }
 
-    function render() {
+    function renderTasks() {
         const list = document.getElementById('taskList');
         list.innerHTML = "";
         tasks.forEach(t => {
-            list.innerHTML += `<div class="glass-card task-card">
-                <div><b>${t.name}</b><br><small>${new Date(t.start).toLocaleString(currentLang)}</small></div>
-                <button class="delete-btn" onclick="deleteTask(${t.id})">✕</button>
+            list.innerHTML += `<div class="glass-card" style="display:flex; justify-content:space-between">
+                <span><b>${t.name}</b><br><small>${t.start}</small></span>
+                <button onclick="deleteTask(${t.id})" style="background:none; border:none; color:white;">✕</button>
             </div>`;
         });
     }
 
     function deleteTask(id) {
         tasks = tasks.filter(t => t.id !== id);
-        localStorage.setItem('tw_tasks', JSON.stringify(tasks));
-        render();
+        renderTasks();
     }
 
-    function aiSort() {
-        tasks.sort((a,b) => a.start.localeCompare(b.start));
-        render();
-    }
-
-    // --- WECKER LOGIK ---
-    function addAlarm() {
-        const time = document.getElementById('alarmTime').value;
-        const note = document.getElementById('alarmNote').value || "Wecker";
-        if(!time) return;
-        alarms.push({ id: Date.now(), time, note, active: true });
-        localStorage.setItem('tw_alarms', JSON.stringify(alarms));
-        renderAlarms();
-    }
-
-    function renderAlarms() {
-        const list = document.getElementById('alarmList');
-        list.innerHTML = "";
-        alarms.forEach(a => {
-            list.innerHTML += `<div class="glass-card task-card ${a.triggered ? 'alarm-active' : ''}">
-                <div><b>${a.time} Uhr</b><br><small>${a.note}</small></div>
-                <button class="delete-btn" onclick="deleteAlarm(${a.id})">✕</button>
-            </div>`;
-        });
-    }
-
-    function deleteAlarm(id) {
-        alarms = alarms.filter(a => a.id !== id);
-        localStorage.setItem('tw_alarms', JSON.stringify(alarms));
-        renderAlarms();
-    }
-
-    // Alarm Check Intervall (alle 10 Sek)
-    setInterval(() => {
-        const now = new Date();
-        const currentTime = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        alarms.forEach(a => {
-            if(a.active && a.time === currentTime) {
-                a.triggered = true;
-                renderAlarms();
-                // Hier könnte ein Sound kommen: new Audio('path/to/sound.mp3').play();
-            }
-        });
-    }, 10000);
-
-    // --- FOCUS TIMER LOGIK ---
-    function toggleTimer() {
-        if(isTimerRunning) {
-            clearInterval(timerInterval);
-            document.getElementById('btn-timer-start').innerText = "Start";
-        } else {
-            timerInterval = setInterval(updateTimer, 1000);
-            document.getElementById('btn-timer-start').innerText = "Pause";
-        }
-        isTimerRunning = !isTimerRunning;
-    }
-
-    function updateTimer() {
-        if(timeLeft <= 0) {
-            clearInterval(timerInterval);
-            alert("Fokus-Zeit vorbei! Mach eine Pause.");
-            resetTimer();
-            return;
-        }
-        timeLeft--;
-        const mins = Math.floor(timeLeft / 60);
-        const secs = timeLeft % 60;
-        document.getElementById('timerDisplay').innerText = `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    function resetTimer() {
-        clearInterval(timerInterval);
-        timeLeft = 25 * 60;
-        isTimerRunning = false;
-        document.getElementById('timerDisplay').innerText = "25:00";
-        document.getElementById('btn-timer-start').innerText = "Start";
-    }
-
-    // --- NAVIGATION ---
-    function showPage(pageId, btn) {
-        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-        document.getElementById(pageId).style.display = 'block';
+    // NAVIGATION
+    function showPage(p, btn) {
+        document.querySelectorAll('.page').forEach(page => page.style.display = 'none');
+        document.getElementById(p).style.display = 'block';
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
-    applyTexts();
+    // TIMER (Pomodoro)
+    let timeLeft = 1500;
+    function toggleTimer() {
+        setInterval(() => {
+            if(timeLeft > 0) {
+                timeLeft--;
+                const m = Math.floor(timeLeft / 60);
+                const s = timeLeft % 60;
+                document.getElementById('timerDisplay').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+        }, 1000);
+    }
 </script>
 </body>
 </html>
