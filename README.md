@@ -3,184 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subway Surfers Task Manager</title>
+    <title>Subway Surfers Theme Layout</title>
     <style>
-        /* 1. Grund-Setup */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background: #000;
+            background-color: #121212;
             color: white;
-            overflow-x: hidden;
+            font-family: 'Arial Black', sans-serif;
+            padding: 40px 20px;
         }
 
-        /* 2. Hintergrund-Video Container */
-        .video-background {
-            position: fixed;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3.5rem;
+            margin-bottom: 50px;
+            color: #fff;
+            text-shadow: 4px 4px #ff00ff;
+        }
+
+        /* Das massive Themen-Feld */
+        .theme-card {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Massive Höhe für das Video */
+            border-radius: 30px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 6px solid #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .theme-card:hover {
+            transform: scale(1.03);
+            border-color: #00ff00;
+        }
+
+        /* Das unruhige Video im Hintergrund des Feldes */
+        .card-bg-video {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            filter: brightness(0.5) contrast(1.2); /* Video dunkler für Lesbarkeit */
-        }
-
-        .video-background video {
-            width: 100vw;
-            height: 100vh;
             object-fit: cover;
+            z-index: 1;
         }
 
-        /* 3. Content Layout */
-        .content-overlay {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 40px 20px;
+        /* Dunkler Filter ÜBER dem Video, damit der Text knallt */
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3); /* Nur leicht abdunkeln */
+            z-index: 2;
         }
 
-        h1 {
+        /* Der Text im Feld */
+        .theme-title {
+            position: relative;
+            z-index: 3;
             font-size: 3rem;
             text-transform: uppercase;
-            text-shadow: 3px 3px 0px #ff00ff, -3px -3px 0px #00ffff;
-            margin-bottom: 30px;
             text-align: center;
+            letter-spacing: -2px;
+            text-shadow: 4px 4px 0px rgba(0,0,0,1);
+            pointer-events: none;
         }
 
-        /* 4. Task-Felder (Size & Glassmorphism) */
-        .task-list {
-            width: 100%;
-            max-width: 700px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        /* Checkbox-Stil rechts im Feld */
+        .theme-status {
+            position: absolute;
+            right: 30px;
+            bottom: 30px;
+            z-index: 4;
         }
 
-        .task-item {
-            /* Größe der Felder */
-            min-height: 100px; 
-            padding: 25px;
-            
-            /* Glassmorphism Effekt gegen unruhigen Hintergrund */
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px);
-            
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-
-        .task-item:hover {
-            transform: scale(1.02);
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #00ff00;
-        }
-
-        .task-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .checkbox {
-            width: 40px;
-            height: 40px;
+        input[type="checkbox"] {
+            width: 50px;
+            height: 50px;
             cursor: pointer;
             accent-color: #00ff00;
-        }
-
-        /* 5. Input Bereich */
-        .input-group {
-            margin-bottom: 40px;
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 700px;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 15px;
-            border-radius: 15px;
-            border: none;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            color: #000;
-        }
-
-        button.add-btn {
-            padding: 15px 30px;
-            border-radius: 15px;
-            border: none;
-            background: #00ff00;
-            color: black;
-            font-weight: bold;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button.add-btn:hover {
-            background: #00cc00;
         }
     </style>
 </head>
 <body>
 
-    <div class="video-background">
-        <video autoplay muted loop playsinline>
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-            Dein Browser unterstützt keine Videos.
-        </video>
-    </div>
+    <div class="container">
+        <h1>LEVEL UP TASKS</h1>
 
-    <div class="content-overlay">
-        <h1>My Tasks</h1>
-
-        <div class="input-group">
-            <input type="text" id="taskInput" placeholder="Was musst du tun?">
-            <button class="add-btn" onclick="addTask()">ADD</button>
-        </div>
-
-        <div class="task-list" id="taskList">
-            <div class="task-item">
-                <span class="task-text">Hausaufgaben machen</span>
-                <input type="checkbox" class="checkbox">
-            </div>
-            <div class="task-item">
-                <span class="task-text">Subway Surfers Highscore knacken</span>
-                <input type="checkbox" class="checkbox">
+        <div class="theme-card">
+            <video class="card-bg-video" autoplay muted loop playsinline>
+                <source src="DEIN_VIDEO_LINK_1.mp4" type="video/mp4">
+            </video>
+            <div class="card-overlay"></div>
+            <div class="theme-title">MATHE TASKS</div>
+            <div class="theme-status">
+                <input type="checkbox">
             </div>
         </div>
+
+        <div class="theme-card">
+            <video class="card-bg-video" autoplay muted loop playsinline>
+                <source src="DEIN_VIDEO_LINK_2.mp4" type="video/mp4">
+            </video>
+            <div class="card-overlay"></div>
+            <div class="theme-title">GAMING GOALS</div>
+            <div class="theme-status">
+                <input type="checkbox">
+            </div>
+        </div>
+
+        <div class="theme-card">
+            <video class="card-bg-video" autoplay muted loop playsinline>
+                <source src="DEIN_VIDEO_LINK_3.mp4" type="video/mp4">
+            </video>
+            <div class="card-overlay"></div>
+            <div class="theme-title">GYM TIME</div>
+            <div class="theme-status">
+                <input type="checkbox">
+            </div>
+        </div>
+
     </div>
 
-    <script>
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            const taskList = document.getElementById('taskList');
-
-            if (input.value.trim() !== "") {
-                const newTask = document.createElement('div');
-                newTask.className = 'task-item';
-                newTask.innerHTML = `
-                    <span class="task-text">${input.value}</span>
-                    <input type="checkbox" class="checkbox">
-                `;
-                taskList.appendChild(newTask);
-                input.value = "";
-            }
-        }
-    </script>
 </body>
 </html>
