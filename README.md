@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
@@ -11,7 +11,6 @@
             --accent: #7dd3fc;
             --ai-glow: #c084fc;
             --text: #ffffff;
-            /* Dein Anime Sky Bild als Standard */
             --bg-image: url('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234');
         }
 
@@ -34,43 +33,39 @@
             backdrop-filter: blur(15px) saturate(150%);
             border: 1px solid var(--glass-border);
             border-radius: 25px;
-            padding: 20px; margin-bottom: 20px;
+            padding: 25px; margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         }
 
-        header { padding: 30px; text-align: center; font-size: 32px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        header { padding: 40px; text-align: center; font-size: 36px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); letter-spacing: 1px; }
 
         .container { width: 95%; max-width: 550px; z-index: 1; }
 
-        label { display: block; font-size: 0.75rem; margin-bottom: 5px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        label { display: block; font-size: 0.75rem; margin-bottom: 8px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
 
-        .input-section input {
-            width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.1);
+        .input-section input, select {
+            width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-border); border-radius: 12px;
-            color: white; margin-bottom: 15px; font-size: 14px; box-sizing: border-box;
+            color: white; margin-bottom: 20px; font-size: 14px; box-sizing: border-box; outline: none;
         }
 
-        .range-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .range-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
         .btn {
-            width: 100%; padding: 15px; border-radius: 15px; border: none;
-            font-weight: 700; cursor: pointer; transition: 0.3s; margin-bottom: 10px;
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
+            font-weight: 700; cursor: pointer; transition: transform 0.2s, background 0.3s; margin-bottom: 12px;
         }
+        .btn:active { transform: scale(0.98); }
         .btn-main { background: var(--accent); color: #0c4a6e; }
         .btn-ai { background: linear-gradient(135deg, var(--ai-glow), #818cf8); color: white; }
 
+        .nav { display: flex; gap: 40px; margin-bottom: 30px; } /* GAP VERGRÖSSERT */
+        .nav-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 12px 30px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .nav-btn.active { background: white; color: #334155; font-weight: bold; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
+
         .task-card { display: flex; justify-content: space-between; align-items: center; }
-        .task-info b { font-size: 1.1rem; display: block; margin-bottom: 4px; }
-        .task-info span { font-size: 0.8rem; color: #e2e8f0; display: block; }
-        .delete-btn { background: rgba(255, 68, 68, 0.4); border: none; color: white; padding: 5px 12px; border-radius: 10px; cursor: pointer; }
-
-        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
-        .nav-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
-        .nav-btn.active { background: white; color: #334155; font-weight: bold; }
-
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .theme-opt { height: 70px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: 0 2px 4px black; background-size: cover; border: 2px solid transparent; }
-        .theme-opt:hover { border-color: white; }
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .theme-opt { height: 80px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: 0 2px 4px black; background-size: cover; border: 2px solid transparent; }
     </style>
 </head>
 <body>
@@ -78,40 +73,47 @@
 <header id="ui-title">TimeWise AI</header>
 
 <div class="nav">
-    <button class="nav-btn active" onclick="showPage('plannerPage', this)">Planer</button>
-    <button class="nav-btn" onclick="showPage('settingsPage', this)">Settings</button>
+    <button class="nav-btn active" id="nav-planner" onclick="showPage('plannerPage', this)">Planer</button>
+    <button class="nav-btn" id="nav-settings" onclick="showPage('settingsPage', this)">Settings</button>
 </div>
 
 <div class="container">
-    <div id="plannerPage" style="display: block;">
+    <div id="plannerPage">
         <div class="glass-card input-section">
-            <label>Aufgabe</label>
-            <input type="text" id="taskName" placeholder="Was steht an?">
+            <label id="lbl-task">Aufgabe</label>
+            <input type="text" id="taskName" placeholder="...">
             
             <div class="range-grid">
                 <div>
-                    <label>Von</label>
+                    <label id="lbl-from">Von</label>
                     <input type="datetime-local" id="taskStart">
                 </div>
                 <div>
-                    <label>Bis</label>
+                    <label id="lbl-to">Bis</label>
                     <input type="datetime-local" id="taskEnd">
                 </div>
             </div>
 
-            <button class="btn btn-main" onclick="addTask()">Termin hinzufügen</button>
-            <button class="btn btn-ai" onclick="aiSort()">✨ KI-Optimierung</button>
+            <button class="btn btn-main" id="btn-add" onclick="addTask()">Termin hinzufügen</button>
+            <button class="btn btn-ai" id="btn-ai" onclick="aiSort()">✨ KI-Optimierung</button>
         </div>
         <div id="taskList"></div>
     </div>
 
     <div id="settingsPage" style="display: none;">
         <div class="glass-card">
-            <h3 style="margin-bottom: 15px;">Umgebungen</h3>
+            <label id="lbl-lang">Sprache / Language</label>
+            <select id="langSelect" onchange="changeLanguage(this.value)" style="background: rgba(0,0,0,0.2);">
+                <option value="de">Deutsch</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+            </select>
+
+            <h3 id="lbl-themes" style="margin: 20px 0 15px 0;">Umgebungen</h3>
             <div class="theme-grid">
                 <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600')">Berge</div>
-                <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1600')">Weltraum</div>
-                <div class="theme-opt" style="background-image: url('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')" onclick="setTheme('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')">Anime Sky</div>
+                <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1600')">Space</div>
+                <div class="theme-opt" style="background-image: url('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')" onclick="setTheme('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')">Anime</div>
                 <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1511497584788-876760111969?w=1600')">Wald</div>
             </div>
         </div>
@@ -119,13 +121,56 @@
 </div>
 
 <script>
+    const i18n = {
+        de: {
+            nav_planner: "Planer", nav_settings: "Optionen", lbl_task: "Aufgabe",
+            lbl_from: "Von", lbl_to: "Bis", btn_add: "Termin hinzufügen",
+            btn_ai: "✨ KI-Optimierung", lbl_lang: "Sprache", lbl_themes: "Umgebungen",
+            placeholder: "Was steht an?", alert: "Felder ausfüllen!"
+        },
+        en: {
+            nav_planner: "Planner", nav_settings: "Settings", lbl_task: "Task",
+            lbl_from: "From", lbl_to: "To", btn_add: "Add Appointment",
+            btn_ai: "✨ AI Optimization", lbl_lang: "Language", lbl_themes: "Environments",
+            placeholder: "What's next?", alert: "Please fill all fields!"
+        },
+        fr: {
+            nav_planner: "Agenda", nav_settings: "Réglages", lbl_task: "Tâche",
+            lbl_from: "De", lbl_to: "À", btn_add: "Ajouter un rendez-vous",
+            btn_ai: "✨ Optimisation IA", lbl_lang: "Langue", lbl_themes: "Environnements",
+            placeholder: "Quoi de neuf?", alert: "Veuillez remplir tous les champs!"
+        }
+    };
+
+    let currentLang = localStorage.getItem('tw_lang') || 'de';
     let tasks = JSON.parse(localStorage.getItem('tw_tasks')) || [];
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('tw_lang', lang);
+        applyLanguage();
+    }
+
+    function applyLanguage() {
+        const t = i18n[currentLang];
+        document.getElementById('nav-planner').innerText = t.nav_planner;
+        document.getElementById('nav-settings').innerText = t.nav_settings;
+        document.getElementById('lbl-task').innerText = t.lbl_task;
+        document.getElementById('lbl-from').innerText = t.lbl_from;
+        document.getElementById('lbl-to').innerText = t.lbl_to;
+        document.getElementById('btn-add').innerText = t.btn_add;
+        document.getElementById('btn-ai').innerText = t.btn_ai;
+        document.getElementById('lbl-lang').innerText = t.lbl_lang;
+        document.getElementById('lbl-themes').innerText = t.lbl_themes;
+        document.getElementById('taskName').placeholder = t.placeholder;
+        document.getElementById('langSelect').value = currentLang;
+    }
 
     function addTask() {
         const name = document.getElementById('taskName').value;
         const start = document.getElementById('taskStart').value;
         const end = document.getElementById('taskEnd').value;
-        if(!name || !start || !end) return alert("Felder ausfüllen!");
+        if(!name || !start || !end) return alert(i18n[currentLang].alert);
 
         tasks.push({ id: Date.now(), name, start, end });
         saveAndRender();
@@ -155,10 +200,12 @@
             card.className = "glass-card task-card";
             card.innerHTML = `
                 <div class="task-info">
-                    <b>${task.name}</b>
-                    <span>${new Date(task.start).toLocaleString()} - ${new Date(task.end).toLocaleString()}</span>
+                    <b style="color: var(--accent)">${task.name}</b>
+                    <small style="opacity: 0.8; display:block; margin-top:5px;">
+                        ${new Date(task.start).toLocaleString(currentLang)} - ${new Date(task.end).toLocaleString(currentLang)}
+                    </small>
                 </div>
-                <button class="delete-btn" onclick="deleteTask(${task.id})">✕</button>
+                <button class="delete-btn" style="background:rgba(255,0,0,0.2); border:none; color:white; border-radius:8px; padding:8px 12px; cursor:pointer;" onclick="deleteTask(${task.id})">✕</button>
             `;
             list.appendChild(card);
         });
@@ -175,6 +222,8 @@
         document.body.style.backgroundImage = `url('${url}')`;
     }
 
+    // Init
+    applyLanguage();
     render();
 </script>
 </body>
