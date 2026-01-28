@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeWise AI | Pro Planner</title>
+    <title>TimeWise AI | Termin-Planer</title>
     <style>
         :root {
             --glass: rgba(255, 255, 255, 0.12);
@@ -20,7 +20,7 @@
             display: flex; flex-direction: column; align-items: center;
             background-image: var(--bg-image); background-size: cover;
             background-position: center; background-attachment: fixed;
-            transition: background 0.8s ease-in-out;
+            transition: background 0.8s ease;
         }
 
         body::before {
@@ -31,53 +31,44 @@
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: 25px;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.5);
             padding: 20px; margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
-        header { padding: 25px; text-align: center; font-size: 30px; font-weight: 800; }
+        header { padding: 30px; text-align: center; font-size: 32px; font-weight: 800; }
 
         .container { width: 95%; max-width: 550px; z-index: 1; }
 
-        .nav { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .nav-btn {
-            background: var(--glass); border: 1px solid var(--glass-border); color: white;
-            padding: 10px 18px; border-radius: 50px; cursor: pointer; transition: 0.3s;
+        label { display: block; font-size: 0.75rem; margin-bottom: 5px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+
+        .input-section input, .input-section select {
+            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border); border-radius: 12px;
+            color: white; margin-bottom: 15px; font-size: 14px; box-sizing: border-box;
         }
+
+        .range-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .btn {
+            width: 100%; padding: 15px; border-radius: 15px; border: none;
+            font-weight: 700; cursor: pointer; transition: 0.3s; margin-bottom: 10px;
+        }
+        .btn-main { background: var(--accent); color: black; }
+        .btn-ai { background: linear-gradient(135deg, var(--ai-glow), #6366f1); color: white; }
+
+        .task-card { display: flex; justify-content: space-between; align-items: center; }
+        .task-info b { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+        .task-info span { font-size: 0.8rem; color: #cbd5e1; display: block; }
+        .delete-btn { background: rgba(255, 68, 68, 0.2); border: 1px solid #ff4444; color: #ff4444; padding: 5px 10px; border-radius: 8px; cursor: pointer; }
+
+        .nav { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 20px; border-radius: 50px; cursor: pointer; }
         .nav-btn.active { background: white; color: black; font-weight: bold; }
 
-        .btn-ai {
-            background: linear-gradient(135deg, var(--ai-glow), #6366f1);
-            color: white; border: none; padding: 14px; border-radius: 15px;
-            width: 100%; font-weight: 700; cursor: pointer; margin-bottom: 10px;
-        }
-
-        .task { margin: 15px 0; border-left: 5px solid var(--accent); }
-        .task-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .task-time { font-size: 0.85rem; color: var(--accent); margin-top: 5px; }
-        
-        .delete-btn { background: none; border: none; color: #ff4444; cursor: pointer; font-size: 1.2rem; padding: 5px; }
-
-        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        input, select {
-            width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--glass-border); border-radius: 12px;
-            color: white; font-size: 14px; outline: none; box-sizing: border-box;
-        }
-
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .theme-option {
-            height: 80px; border-radius: 15px; cursor: pointer; border: 2px solid transparent;
-            background-size: cover; background-position: center;
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
-            text-shadow: 0 2px 4px black; font-size: 0.85rem;
-        }
-
-        .page { display: none; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .theme-opt { height: 70px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: 0 2px 4px black; background-size: cover; }
     </style>
 </head>
 <body>
@@ -85,39 +76,44 @@
 <header id="ui-title">TimeWise AI</header>
 
 <div class="nav">
-    <button class="nav-btn active" onclick="showPage('timerPage', this)" id="nav-timer">Planer</button>
-    <button class="nav-btn" onclick="showPage('settingsPage', this)" id="nav-settings">Settings</button>
+    <button class="nav-btn active" onclick="showPage('plannerPage', this)" id="nav-plan">Planer</button>
+    <button class="nav-btn" onclick="showPage('settingsPage', this)" id="nav-set">Settings</button>
 </div>
 
 <div class="container">
-    <div id="timerPage" class="page" style="display:block;">
-        <div class="glass-card">
-            <input type="text" id="taskInput" placeholder="Was steht an?" style="margin-bottom: 10px;">
-            <div class="input-group">
-                <input type="date" id="taskDate">
-                <div style="display: flex; gap: 5px;">
-                    <input type="time" id="taskStart">
-                    <input type="time" id="taskEnd">
+    <div id="plannerPage" style="display: block;">
+        <div class="glass-card input-section">
+            <label id="lbl-task">Aufgabe</label>
+            <input type="text" id="taskName" placeholder="Name...">
+            
+            <div class="range-grid">
+                <div>
+                    <label id="lbl-from">Von</label>
+                    <input type="datetime-local" id="taskStart">
+                </div>
+                <div>
+                    <label id="lbl-to">Bis</label>
+                    <input type="datetime-local" id="taskEnd">
                 </div>
             </div>
-            <button class="btn-ai" style="background: var(--accent); color:black;" onclick="addTask()" id="ui-add">Hinzufügen</button>
-            <button class="btn-ai" onclick="aiOptimize()" id="ui-ai-sort">✨ KI-Zeitplan Optimierung</button>
+
+            <button class="btn btn-main" onclick="addTask()" id="ui-add">Hinzufügen</button>
+            <button class="btn btn-ai" onclick="aiSort()" id="ui-ai">✨ KI-Optimierung</button>
         </div>
         <div id="taskList"></div>
     </div>
 
-    <div id="settingsPage" class="page">
+    <div id="settingsPage" style="display: none;">
         <div class="glass-card">
             <h3 id="ui-env">Umgebungen</h3>
             <div class="theme-grid">
-                <div class="theme-option" id="img-mnt" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200')" onclick="setTheme('mountains')">Berge</div>
-                <div class="theme-option" id="img-spc" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=200')" onclick="setTheme('space')">Weltraum</div>
-                <div class="theme-option" id="img-ocn" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200')" onclick="setTheme('ocean')">Ozean</div>
-                <div class="theme-option" id="img-for" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?w=200')" onclick="setTheme('forest')">Wald</div>
+                <div class="theme-opt" id="img-mnt" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200')" onclick="setTheme('mountains')">Berge</div>
+                <div class="theme-opt" id="img-spc" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=200')" onclick="setTheme('space')">Weltraum</div>
+                <div class="theme-opt" id="img-ocn" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200')" onclick="setTheme('ocean')">Ozean</div>
+                <div class="theme-opt" id="img-for" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?w=200')" onclick="setTheme('forest')">Wald</div>
             </div>
-
-            <h3 style="margin-top: 25px;" id="ui-lang-label">Sprache</h3>
-            <select id="langSelect" onchange="changeLanguage()">
+            <h3 style="margin-top: 20px;" id="ui-lang-label">Sprache</h3>
+            <select id="langSelect" onchange="changeLang()">
                 <option value="de">Deutsch</option>
                 <option value="en">English</option>
                 <option value="fr">Français</option>
@@ -128,73 +124,94 @@
 </div>
 
 <script>
-    let tasks = JSON.parse(localStorage.getItem('tw_v5_tasks')) || [];
-    let currentLang = localStorage.getItem('tw_lang') || 'de';
+    let tasks = JSON.parse(localStorage.getItem('tw_range_tasks')) || [];
+    let lang = localStorage.getItem('tw_range_lang') || 'de';
 
-    const translations = {
-        de: { title: "TimeWise AI", timer: "Planer", settings: "Optionen", add: "Task hinzufügen", aiSort: "✨ KI-Zeitplan optimieren", env: "Umgebungen", lang: "Sprache", placeholder: "Was planst du?", break: "☕ KI-Pause", mnt: "Berge", spc: "Weltraum", ocn: "Ozean", for: "Wald" },
-        en: { title: "TimeWise AI", timer: "Planner", settings: "Settings", add: "Add Task", aiSort: "✨ AI Schedule Optimization", env: "Environments", lang: "Language", placeholder: "What's next?", break: "☕ AI Break", mnt: "Mountains", spc: "Space", ocn: "Ocean", for: "Forest" },
-        fr: { title: "TimeWise AI", timer: "Planificateur", settings: "Réglages", add: "Ajouter", aiSort: "✨ Optimisation IA", env: "Environnements", lang: "Langue", placeholder: "Votre projet ?", break: "☕ Pause IA", mnt: "Montagnes", spc: "Espace", ocn: "Océan", for: "Forêt" },
-        es: { title: "TimeWise AI", timer: "Planificador", settings: "Ajustes", add: "Añadir", aiSort: "✨ Optimización IA", env: "Entornos", lang: "Idioma", placeholder: "¿Qué sigue?", break: "☕ Pausa IA", mnt: "Montañas", spc: "Espacio", ocn: "Océano", for: "Bosque" }
+    const text = {
+        de: { title: "TimeWise AI", plan: "Planer", set: "Optionen", add: "Termin hinzufügen", ai: "✨ KI-Zeitplan", env: "Umgebungen", mnt: "Berge", spc: "Weltraum", ocn: "Ozean", for: "Wald", pause: "☕ KI-Pause", from: "Von", to: "Bis", task: "Aufgabe" },
+        en: { title: "TimeWise AI", plan: "Planner", set: "Settings", add: "Add Event", ai: "✨ AI Schedule", env: "Environments", mnt: "Mountains", spc: "Space", ocn: "Ocean", for: "Forest", pause: "☕ AI Break", from: "From", to: "To", task: "Task" },
+        fr: { title: "TimeWise AI", plan: "Planificateur", set: "Réglages", add: "Ajouter l'événement", ai: "✨ Optimisation IA", env: "Environnements", mnt: "Montagnes", spc: "Espace", ocn: "Océan", for: "Forêt", pause: "☕ Pause IA", from: "De", to: "À", task: "Tâche" },
+        es: { title: "TimeWise AI", plan: "Planificador", set: "Ajustes", add: "Añadir evento", ai: "✨ Optimización IA", env: "Entornos", mnt: "Montañas", spc: "Espacio", ocn: "Océano", for: "Bosque", pause: "☕ Pausa IA", from: "Desde", to: "Hasta", task: "Tarea" }
     };
 
-    function changeLanguage() {
-        currentLang = document.getElementById('langSelect').value;
-        localStorage.setItem('tw_lang', currentLang);
+    function changeLang() {
+        lang = document.getElementById('langSelect').value;
+        localStorage.setItem('tw_range_lang', lang);
         updateUI();
     }
 
     function updateUI() {
-        const t = translations[currentLang];
+        const t = text[lang];
         document.getElementById('ui-title').innerText = t.title;
-        document.getElementById('nav-timer').innerText = t.timer;
-        document.getElementById('nav-settings').innerText = t.settings;
+        document.getElementById('nav-plan').innerText = t.plan;
+        document.getElementById('nav-set').innerText = t.set;
         document.getElementById('ui-add').innerText = t.add;
-        document.getElementById('ui-ai-sort').innerText = t.aiSort;
+        document.getElementById('ui-ai').innerText = t.ai;
         document.getElementById('ui-env').innerText = t.env;
-        document.getElementById('ui-lang-label').innerText = t.lang;
-        document.getElementById('taskInput').placeholder = t.placeholder;
-        
-        // Bilder-Texte ändern
         document.getElementById('img-mnt').innerText = t.mnt;
         document.getElementById('img-spc').innerText = t.spc;
         document.getElementById('img-ocn').innerText = t.ocn;
         document.getElementById('img-for').innerText = t.for;
-        
+        document.getElementById('lbl-from').innerText = t.from;
+        document.getElementById('lbl-to').innerText = t.to;
+        document.getElementById('lbl-task').innerText = t.task;
         render();
     }
 
     function addTask() {
-        const name = document.getElementById('taskInput').value;
-        const date = document.getElementById('taskDate').value;
+        const name = document.getElementById('taskName').value;
         const start = document.getElementById('taskStart').value;
         const end = document.getElementById('taskEnd').value;
+        if(!name || !start || !end) return alert("Bitte alle Felder ausfüllen!");
 
-        if (!name || !date) { alert("Bitte Name und Datum angeben!"); return; }
-
-        tasks.push({ id: Date.now(), name, date, start, end, type: 'work' });
-        render();
+        tasks.push({ id: Date.now(), name, start, end, type: 'work' });
+        saveAndRender();
     }
 
     function deleteTask(id) {
         tasks = tasks.filter(t => t.id !== id);
+        saveAndRender();
+    }
+
+    function aiSort() {
+        tasks.sort((a, b) => a.start.localeCompare(b.start));
         render();
     }
 
-    function aiOptimize() {
-        if (tasks.length === 0) return;
-        // Sortiere nach Datum und Uhrzeit
-        tasks.sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
-        
-        let optimized = [];
-        tasks.filter(t => t.type !== 'break').forEach((t, i) => {
-            optimized.push(t);
-            if ((i + 1) % 2 === 0) {
-                optimized.push({ id: Date.now() + i, name: translations[currentLang].break, date: t.date, start: t.end, end: "", type: 'break' });
-            }
-        });
-        tasks = optimized;
+    function saveAndRender() {
+        localStorage.setItem('tw_range_tasks', JSON.stringify(tasks));
         render();
+    }
+
+    function formatDT(dt) {
+        if(!dt) return "";
+        const d = new Date(dt);
+        return d.toLocaleDateString(lang) + " " + d.toLocaleTimeString(lang, {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function render() {
+        const list = document.getElementById('taskList');
+        list.innerHTML = "";
+        tasks.forEach(task => {
+            const card = document.createElement('div');
+            card.className = "glass-card task-card";
+            card.innerHTML = `
+                <div class="task-info">
+                    <b>${task.name}</b>
+                    <span>🟢 ${formatDT(task.start)}</span>
+                    <span>🔴 ${formatDT(task.end)}</span>
+                </div>
+                <button class="delete-btn" onclick="deleteTask(${task.id})">✕</button>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    function showPage(p, btn) {
+        document.getElementById('plannerPage').style.display = p === 'plannerPage' ? 'block' : 'none';
+        document.getElementById('settingsPage').style.display = p === 'settingsPage' ? 'block' : 'none';
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
     function setTheme(t) {
@@ -207,38 +224,9 @@
         document.body.style.backgroundImage = `url('${urls[t]}')`;
     }
 
-    function showPage(id, btn) {
-        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-        document.getElementById(id).style.display = 'block';
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function render() {
-        const list = document.getElementById("taskList");
-        list.innerHTML = "";
-        tasks.forEach(task => {
-            const div = document.createElement("div");
-            div.className = `glass-card task`;
-            if(task.type === 'break') div.style.borderLeft = "5px solid var(--ai-glow)";
-
-            div.innerHTML = `
-                <div class="task-header">
-                    <div>
-                        <div style="font-weight:700; font-size:1.1rem;">${task.name}</div>
-                        <div class="task-time">📅 ${task.date} | 🕒 ${task.start || '--:--'} - ${task.end || '--:--'}</div>
-                    </div>
-                    <button class="delete-btn" onclick="deleteTask(${task.id})">✕</button>
-                </div>
-            `;
-            list.appendChild(div);
-        });
-        localStorage.setItem('tw_v5_tasks', JSON.stringify(tasks));
-    }
-
-    // Init
-    document.getElementById('langSelect').value = currentLang;
+    document.getElementById('langSelect').value = lang;
     updateUI();
 </script>
+
 </body>
 </html>
