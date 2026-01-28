@@ -3,69 +3,91 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TimeWise AI | Anime Sky Edition</title>
+    <title>TimeWise AI | Night Edition</title>
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --accent: #7dd3fc;
-            --ai-glow: #c084fc;
-            --text: #ffffff;
-            --bg-image: url('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234');
+            --glass: rgba(15, 23, 42, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --accent: #38bdf8;
+            --ai-glow: #a855f7;
+            --text: #f8fafc;
+            /* Hochwertiger Anime Nachthimmel */
+            --bg-image: url('https://images.alphacoders.com/132/1327170.png');
         }
 
         body {
             font-family: 'SF Pro Display', -apple-system, sans-serif;
             margin: 0; min-height: 100vh; color: var(--text);
             display: flex; flex-direction: column; align-items: center;
-            background-image: var(--bg-image); background-size: cover;
-            background-position: center; background-attachment: fixed;
-            transition: background 0.5s ease;
+            background: #020617 var(--bg-image) no-repeat center center fixed;
+            background-size: cover;
         }
 
         body::before {
             content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.2); z-index: -1;
+            background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.4));
+            z-index: -1;
+        }
+
+        header { padding: 60px 20px 40px; text-align: center; font-size: 48px; font-weight: 900; letter-spacing: -1px; text-shadow: 0 0 20px rgba(56, 189, 248, 0.5); }
+
+        .container { width: 92%; max-width: 550px; z-index: 1; }
+
+        /* NAVIGATION - EXTRA WEIT */
+        .nav { 
+            display: flex; 
+            justify-content: center; 
+            gap: 80px; /* Extrem weiter Abstand für die Icons/Buttons */
+            margin-bottom: 50px; 
+        }
+
+        .nav-btn { 
+            background: var(--glass); 
+            border: 1px solid var(--glass-border); 
+            color: white; 
+            padding: 14px 40px; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.1rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .nav-btn.active { 
+            background: var(--accent); 
+            color: #0f172a; 
+            font-weight: bold; 
+            box-shadow: 0 0 25px var(--accent);
+            transform: scale(1.1);
         }
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(15px) saturate(150%);
+            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 25px; margin-bottom: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            border-radius: 30px;
+            padding: 35px; margin-bottom: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        header { padding: 40px; text-align: center; font-size: 36px; font-weight: 800; text-shadow: 0 4px 10px rgba(0,0,0,0.3); letter-spacing: 1px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 10px; color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
 
-        .container { width: 95%; max-width: 550px; z-index: 1; }
-
-        label { display: block; font-size: 0.75rem; margin-bottom: 8px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
-
-        .input-section input, select {
-            width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border); border-radius: 12px;
-            color: white; margin-bottom: 20px; font-size: 14px; box-sizing: border-box; outline: none;
+        input, select {
+            width: 100%; padding: 18px; background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border); border-radius: 15px;
+            color: white; margin-bottom: 25px; font-size: 16px; box-sizing: border-box; outline: none;
         }
 
         .range-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
         .btn {
-            width: 100%; padding: 16px; border-radius: 15px; border: none;
-            font-weight: 700; cursor: pointer; transition: transform 0.2s, background 0.3s; margin-bottom: 12px;
+            width: 100%; padding: 20px; border-radius: 20px; border: none;
+            font-weight: 800; cursor: pointer; transition: 0.3s; margin-bottom: 15px; font-size: 16px; text-transform: uppercase;
         }
-        .btn:active { transform: scale(0.98); }
-        .btn-main { background: var(--accent); color: #0c4a6e; }
-        .btn-ai { background: linear-gradient(135deg, var(--ai-glow), #818cf8); color: white; }
+        .btn-main { background: var(--accent); color: #082f49; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); }
+        .btn-ai { background: linear-gradient(135deg, var(--ai-glow), #6366f1); color: white; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4); }
 
-        .nav { display: flex; gap: 40px; margin-bottom: 30px; } /* GAP VERGRÖSSERT */
-        .nav-btn { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 12px 30px; border-radius: 50px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
-        .nav-btn.active { background: white; color: #334155; font-weight: bold; box-shadow: 0 0 15px rgba(255,255,255,0.4); }
-
-        .task-card { display: flex; justify-content: space-between; align-items: center; }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .theme-opt { height: 80px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: 0 2px 4px black; background-size: cover; border: 2px solid transparent; }
+        .task-card { display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--accent); }
     </style>
 </head>
 <body>
@@ -79,7 +101,7 @@
 
 <div class="container">
     <div id="plannerPage">
-        <div class="glass-card input-section">
+        <div class="glass-card">
             <label id="lbl-task">Aufgabe</label>
             <input type="text" id="taskName" placeholder="...">
             
@@ -103,91 +125,62 @@
     <div id="settingsPage" style="display: none;">
         <div class="glass-card">
             <label id="lbl-lang">Sprache / Language</label>
-            <select id="langSelect" onchange="changeLanguage(this.value)" style="background: rgba(0,0,0,0.2);">
-                <option value="de">Deutsch</option>
-                <option value="en">English</option>
-                <option value="fr">Français</option>
+            <select id="langSelect" onchange="changeLanguage(this.value)">
+                <option value="de">Deutsch 🇩🇪</option>
+                <option value="en">English 🇺🇸</option>
+                <option value="fr">Français 🇫🇷</option>
+                <option value="jp">日本語 🇯🇵</option>
             </select>
-
-            <h3 id="lbl-themes" style="margin: 20px 0 15px 0;">Umgebungen</h3>
-            <div class="theme-grid">
-                <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600')">Berge</div>
-                <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=1600')">Space</div>
-                <div class="theme-opt" style="background-image: url('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')" onclick="setTheme('https://preview.redd.it/anime-sky-v0-m3d077n0a2lb1.jpg?auto=webp&s=5573756858908856281786576858223456832234')">Anime</div>
-                <div class="theme-opt" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?w=200')" onclick="setTheme('https://images.unsplash.com/photo-1511497584788-876760111969?w=1600')">Wald</div>
-            </div>
+            
+            <p style="text-align: center; opacity: 0.6; font-size: 0.9rem;">TimeWise AI v2.5 - Night Sky Edition</p>
         </div>
     </div>
 </div>
 
 <script>
-    const i18n = {
-        de: {
-            nav_planner: "Planer", nav_settings: "Optionen", lbl_task: "Aufgabe",
-            lbl_from: "Von", lbl_to: "Bis", btn_add: "Termin hinzufügen",
-            btn_ai: "✨ KI-Optimierung", lbl_lang: "Sprache", lbl_themes: "Umgebungen",
-            placeholder: "Was steht an?", alert: "Felder ausfüllen!"
-        },
-        en: {
-            nav_planner: "Planner", nav_settings: "Settings", lbl_task: "Task",
-            lbl_from: "From", lbl_to: "To", btn_add: "Add Appointment",
-            btn_ai: "✨ AI Optimization", lbl_lang: "Language", lbl_themes: "Environments",
-            placeholder: "What's next?", alert: "Please fill all fields!"
-        },
-        fr: {
-            nav_planner: "Agenda", nav_settings: "Réglages", lbl_task: "Tâche",
-            lbl_from: "De", lbl_to: "À", btn_add: "Ajouter un rendez-vous",
-            btn_ai: "✨ Optimisation IA", lbl_lang: "Langue", lbl_themes: "Environnements",
-            placeholder: "Quoi de neuf?", alert: "Veuillez remplir tous les champs!"
-        }
+    // Übersetzungs-Datenbank
+    const langData = {
+        de: { title: "TimeWise AI", planner: "Planer", settings: "Optionen", task: "Aufgabe", from: "Von", to: "Bis", add: "Hinzufügen", ai: "✨ KI-Optimierung", ph: "Was planst du?" },
+        en: { title: "TimeWise AI", planner: "Planner", settings: "Settings", task: "Task", from: "From", to: "To", add: "Add Task", ai: "✨ AI Optimize", ph: "What's next?" },
+        fr: { title: "TimeWise AI", planner: "Agenda", settings: "Réglages", task: "Tâche", from: "De", to: "À", add: "Ajouter", ai: "✨ Optimisation IA", ph: "Quoi de neuf?" },
+        jp: { title: "タイムワイズ AI", planner: "予定表", settings: "設定", task: "タスク", from: "開始", to: "終了", add: "追加", ai: "✨ AI最適化", ph: "次は何をしますか？" }
     };
 
     let currentLang = localStorage.getItem('tw_lang') || 'de';
     let tasks = JSON.parse(localStorage.getItem('tw_tasks')) || [];
 
+    // Sprache beim Laden und Wechseln anwenden
     function changeLanguage(lang) {
         currentLang = lang;
         localStorage.setItem('tw_lang', lang);
-        applyLanguage();
+        applyLang();
     }
 
-    function applyLanguage() {
-        const t = i18n[currentLang];
-        document.getElementById('nav-planner').innerText = t.nav_planner;
-        document.getElementById('nav-settings').innerText = t.nav_settings;
-        document.getElementById('lbl-task').innerText = t.lbl_task;
-        document.getElementById('lbl-from').innerText = t.lbl_from;
-        document.getElementById('lbl-to').innerText = t.lbl_to;
-        document.getElementById('btn-add').innerText = t.btn_add;
-        document.getElementById('btn-ai').innerText = t.btn_ai;
-        document.getElementById('lbl-lang').innerText = t.lbl_lang;
-        document.getElementById('lbl-themes').innerText = t.lbl_themes;
-        document.getElementById('taskName').placeholder = t.placeholder;
+    function applyLang() {
+        const t = langData[currentLang];
+        document.getElementById('ui-title').innerText = t.title;
+        document.getElementById('nav-planner').innerText = t.planner;
+        document.getElementById('nav-settings').innerText = t.settings;
+        document.getElementById('lbl-task').innerText = t.task;
+        document.getElementById('lbl-from').innerText = t.from;
+        document.getElementById('lbl-to').innerText = t.to;
+        document.getElementById('btn-add').innerText = t.add;
+        document.getElementById('btn-ai').innerText = t.ai;
+        document.getElementById('taskName').placeholder = t.ph;
         document.getElementById('langSelect').value = currentLang;
+        render(); // Aufgaben neu rendern für Datumsformat
     }
 
     function addTask() {
         const name = document.getElementById('taskName').value;
         const start = document.getElementById('taskStart').value;
         const end = document.getElementById('taskEnd').value;
-        if(!name || !start || !end) return alert(i18n[currentLang].alert);
-
+        if(!name || !start || !end) return;
         tasks.push({ id: Date.now(), name, start, end });
-        saveAndRender();
-        document.getElementById('taskName').value = "";
+        save();
     }
 
-    function deleteTask(id) {
-        tasks = tasks.filter(t => t.id !== id);
-        saveAndRender();
-    }
-
-    function aiSort() {
-        tasks.sort((a, b) => a.start.localeCompare(b.start));
-        render();
-    }
-
-    function saveAndRender() {
+    function save() {
         localStorage.setItem('tw_tasks', JSON.stringify(tasks));
         render();
     }
@@ -195,20 +188,30 @@
     function render() {
         const list = document.getElementById('taskList');
         list.innerHTML = "";
-        tasks.forEach(task => {
-            const card = document.createElement('div');
-            card.className = "glass-card task-card";
-            card.innerHTML = `
-                <div class="task-info">
-                    <b style="color: var(--accent)">${task.name}</b>
-                    <small style="opacity: 0.8; display:block; margin-top:5px;">
-                        ${new Date(task.start).toLocaleString(currentLang)} - ${new Date(task.end).toLocaleString(currentLang)}
-                    </small>
+        tasks.forEach(t => {
+            const div = document.createElement('div');
+            div.className = "glass-card task-card";
+            div.innerHTML = `
+                <div>
+                    <b style="font-size: 1.2rem; color: var(--accent);">${t.name}</b>
+                    <div style="font-size: 0.85rem; opacity: 0.7; margin-top: 5px;">
+                        ${new Date(t.start).toLocaleString(currentLang)}
+                    </div>
                 </div>
-                <button class="delete-btn" style="background:rgba(255,0,0,0.2); border:none; color:white; border-radius:8px; padding:8px 12px; cursor:pointer;" onclick="deleteTask(${task.id})">✕</button>
+                <button onclick="deleteTask(${t.id})" style="background:rgba(255,0,0,0.2); border:none; color:white; padding:10px; border-radius:10px; cursor:pointer;">✕</button>
             `;
-            list.appendChild(card);
+            list.appendChild(div);
         });
+    }
+
+    function deleteTask(id) {
+        tasks = tasks.filter(t => t.id !== id);
+        save();
+    }
+
+    function aiSort() {
+        tasks.sort((a,b) => a.start.localeCompare(b.start));
+        render();
     }
 
     function showPage(p, btn) {
@@ -218,13 +221,8 @@
         btn.classList.add('active');
     }
 
-    function setTheme(url) {
-        document.body.style.backgroundImage = `url('${url}')`;
-    }
-
-    // Init
-    applyLanguage();
-    render();
+    // Initialisierung
+    applyLang();
 </script>
 </body>
 </html>
